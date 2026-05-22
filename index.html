@@ -390,7 +390,7 @@
       <div class="card-body" id="form-wrap">
         <div class="card-intro">
           <h2>Receipt Submission Survey</h2>
-          <p>We are reviewing our current receipt submission process. Please take a moment to answer the two questions below. Your responses will be sent directly to the accounting team.</p>
+          <p>We are reviewing our current receipt submission process. Please take a moment to answer the two questions below. Your responses will be sent directly to the PCard Team.</p>
         </div>
 
         <form id="survey-form" novalidate>
@@ -442,7 +442,7 @@
           <!-- Your name (optional, helps accounting) -->
           <div class="field">
             <label class="field-label" for="respondent">
-              Your Name <span style="font-weight:400;color:#8B8A8A;">(optional)</span>
+              Your Name
             </label>
             <div class="text-input-wrap">
               <input
@@ -451,13 +451,14 @@
                 name="respondent"
                 placeholder="First and last name"
                 autocomplete="name"
+                required
               />
             </div>
           </div>
 
           <div class="submit-row">
-            <button type="submit">Submit Response</button>
-            <p class="submit-note">Your response will open your email client<br>pre-filled and ready to send.</p>
+            <button type="submit" id="submit-btn">Submit Response</button>
+            <p class="submit-note" id="submit-note"></p>
           </div>
 
         </form>
@@ -468,7 +469,7 @@
             <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg>
           </div>
           <h3>Response Submitted</h3>
-          <p>Thank you for completing the survey.<br>Your email client should open momentarily with your response pre-filled. Please hit <strong>Send</strong> to complete the submission.</p>
+          <p>Thank you for completing the survey.<br>Your response has been sent to the PCard Team.</p>
         </div>
       </div>
 
@@ -500,8 +501,11 @@
       });
     });
 
-    // Handle submission → open mailto
-    form.addEventListener('submit', (e) => {
+    // ── Formspree silent submission ───────────────────────────────
+    // Replace YOUR_FORM_ID below with the ID from formspree.io
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xredkrkn';
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const q1Val = document.querySelector('input[name="q1"]:checked');
@@ -510,30 +514,49 @@
         return;
       }
 
-      const q1Text    = q1Val.value;
-      const q2Text    = document.getElementById('q2').value.trim() || 'N/A';
-      const name      = document.getElementById('respondent').value.trim() || 'Not provided';
+      const q1Text = q1Val.value;
+      const q2Text = document.getElementById('q2').value.trim() || 'N/A';
+      const name   = document.getElementById('respondent').value.trim();
+      if (!name) {
+        alert('Please enter your name before submitting.');
+        document.getElementById('respondent').focus();
+        return;
+      }
 
-      const subject   = encodeURIComponent('Receipt Process Survey Response');
-      const body      = encodeURIComponent(
-        `Receipt Process Survey Response\n` +
-        `──────────────────────────────────\n` +
-        `Respondent: ${name}\n\n` +
-        `Q1 — Have you historically turned in receipts to an office staff member\n` +
-        `     and never had to submit your own receipts?\n` +
-        `     Answer: ${q1Text}\n\n` +
-        (q1Text === 'Yes'
-          ? `Q2 — Name of the individual you turned receipts in to:\n     ${q2Text}\n`
-          : '') +
-        `\nSubmitted via Summit Line Construction Receipt Survey`
-      );
+      const btn  = document.getElementById('submit-btn');
+      const note = document.getElementById('submit-note');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
 
-      window.location.href =
-        `mailto:receipts@summitlineconstruction.com?subject=${subject}&body=${body}`;
+      const payload = {
+        _subject: 'Receipt Process Survey Response',
+        Respondent: name,
+        'Q1 — Historically turned in receipts to office staff?': q1Text,
+        'Q2 — Name of that individual': q1Text === 'Yes' ? q2Text : 'N/A',
+      };
 
-      // Show thank-you
-      form.style.display = 'none';
-      thankyou.style.display = 'block';
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          form.style.display = 'none';
+          thankyou.style.display = 'block';
+        } else {
+          const data = await res.json();
+          note.textContent = 'Submission failed — please try again.';
+          btn.disabled = false;
+          btn.textContent = 'Submit Response';
+          console.error('Formspree error:', data);
+        }
+      } catch (err) {
+        note.textContent = 'Network error — please check your connection and try again.';
+        btn.disabled = false;
+        btn.textContent = 'Submit Response';
+      }
     });
   </script>
 </body>
