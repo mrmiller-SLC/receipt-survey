@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receipt Process Survey — Summit Line Construction</title>
+  <style>
+    /* ─── Brand Variables (Quanta / Summit) ─────────────────────── */
+    :root {
+      --red:       #CD0A1B;
+      --red-dark:  #AA0011;
+      --orange:    #F0941C;
+      --carbon:    #221F1F;
+      --carbon-1:  #3C3A3A;
+      --carbon-7:  #DAD9D9;
+      --carbon-8:  #F4F4F4;
+      --white:     #FFFFFF;
+      --font-head: 'Arial Narrow', Arial, sans-serif;
+      --font-body: Arial, sans-serif;
+    }
+
+    /* ─── Reset & Base ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--carbon-8);
+      color: var(--carbon);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Header ─────────────────────────────────────────────────── */
+    header {
+      background: var(--carbon);
+      padding: 0;
+    }
+
+    .header-accent {
+      height: 6px;
+      background: linear-gradient(90deg, var(--red) 60%, var(--orange) 100%);
+    }
+
+    .header-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 28px 24px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-block {
+      flex-shrink: 0;
+    }
+
+    .logo-badge {
+      width: 64px;
+      height: 64px;
+      background: var(--red);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-badge svg {
+      width: 38px;
+      height: 38px;
+      fill: var(--white);
+    }
+
+    .logo-text {
+      flex: 1;
+    }
+
+    .logo-text h1 {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      line-height: 1.15;
+    }
+
+    .logo-text .sub {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-top: 4px;
+    }
+
+    /* ─── Orange divider bar ─────────────────────────────────────── */
+    .divider-bar {
+      height: 4px;
+      background: var(--orange);
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ─── Main card ──────────────────────────────────────────────── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 36px 16px 48px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(34,31,31,.10);
+      max-width: 640px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .card-top-bar {
+      height: 5px;
+      background: var(--red);
+    }
+
+    .card-body {
+      padding: 36px 40px 40px;
+    }
+
+    .card-intro h2 {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--carbon);
+      margin-bottom: 10px;
+    }
+
+    .card-intro p {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--carbon-1);
+      margin-bottom: 32px;
+    }
+
+    /* ─── Form fields ────────────────────────────────────────────── */
+    .field {
+      margin-bottom: 30px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--carbon);
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .field-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: var(--red);
+      color: var(--white);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 10px;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      gap: 14px;
+    }
+
+    .radio-option {
+      flex: 1;
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-option label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 20px;
+      border: 2px solid var(--carbon-7);
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--carbon-1);
+      cursor: pointer;
+      transition: border-color .15s, background .15s, color .15s;
+      user-select: none;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      border-color: var(--red);
+      background: #FFF5F5;
+      color: var(--red-dark);
+    }
+
+    .radio-option label:hover {
+      border-color: var(--red);
+      background: #FFF5F5;
+    }
+
+    /* Text input */
+    .text-input-wrap {
+      position: relative;
+    }
+
+    .text-input-wrap input[type="text"],
+    .text-input-wrap input[type="email"] {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid var(--carbon-7);
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: var(--font-body);
+      color: var(--carbon);
+      transition: border-color .15s;
+      outline: none;
+    }
+
+    .text-input-wrap input:focus {
+      border-color: var(--red);
+    }
+
+    /* Conditional field */
+    #followup-field {
+      transition: opacity .25s, max-height .3s;
+    }
+
+    #followup-field.hidden {
+      display: none;
+    }
+
+    /* Hint text */
+    .field-hint {
+      font-size: 12.5px;
+      color: #716F6F;
+      margin-top: 7px;
+    }
+
+    /* ─── Submit button ──────────────────────────────────────────── */
+    .submit-row {
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    button[type="submit"] {
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      padding: 14px 36px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    button[type="submit"]:hover {
+      background: var(--red-dark);
+    }
+
+    .submit-note {
+      font-size: 12px;
+      color: #8B8A8A;
+      line-height: 1.5;
+    }
+
+    /* ─── Thank-you screen ───────────────────────────────────────── */
+    #thankyou {
+      display: none;
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    #thankyou .check-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    #thankyou .check-icon svg {
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: var(--white);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    #thankyou h3 {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--carbon);
+      margin-bottom: 10px;
+    }
+
+    #thankyou p {
+      font-size: 14.5px;
+      color: var(--carbon-1);
+      line-height: 1.65;
+    }
+
+    /* ─── Footer ─────────────────────────────────────────────────── */
+    footer {
+      background: var(--carbon);
+      padding: 18px 24px;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 11.5px;
+      color: #8B8A8A;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    footer span.brand {
+      color: var(--orange);
+    }
+
+    @media (max-width: 480px) {
+      .card-body { padding: 28px 22px 32px; }
+      .radio-group { flex-direction: column; }
+      .header-inner { padding: 20px 16px 18px; gap: 14px; }
+      .logo-text h1 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <header>
+    <div class="header-accent"></div>
+    <div class="header-inner">
+      <div class="logo-block">
+        <div class="logo-badge" aria-hidden="true">
+          <!-- Hard hat / construction icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 18h20v2H2v-2zm2-3h16v2H4v-2zM12 2C8.5 2 5.7 4.4 5.1 7.6L5 8H3v6h18V8h-2l-.1-.4C18.3 4.4 15.5 2 12 2zm0 2c2.5 0 4.6 1.6 5.4 3.9L17.7 8H6.3l.3-.1C7.4 5.6 9.5 4 12 4z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="logo-text">
+        <h1>Summit Line Construction</h1>
+        <div class="sub">A Quanta Services Company</div>
+      </div>
+    </div>
+  </header>
+  <div class="divider-bar"></div>
+
+  <!-- ── Main Card ──────────────────────────────────────────────── -->
+  <main>
+    <div class="card">
+      <div class="card-top-bar"></div>
+
+      <!-- Survey form -->
+      <div class="card-body" id="form-wrap">
+        <div class="card-intro">
+          <h2>Receipt Submission Survey</h2>
+          <p>We are reviewing our current receipt submission process. Please take a moment to answer the two questions below. Your responses will be sent directly to the accounting team.</p>
+        </div>
+
+        <form id="survey-form" novalidate>
+
+          <!-- Question 1 -->
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num" aria-hidden="true">1</span>
+              Have you historically turned in receipts to an office staff member and never had to submit your own receipts?
+            </label>
+            <div class="radio-group" role="radiogroup" aria-label="Question 1">
+              <div class="radio-option">
+                <input type="radio" name="q1" id="q1-yes" value="Yes" required />
+                <label for="q1-yes">
+                  <!-- checkmark -->
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5,8 6.5,12 13.5,4"/></svg>
+                  Yes
+                </label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" name="q1" id="q1-no" value="No" required />
+                <label for="q1-no">
+                  <!-- X -->
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>
+                  No
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 2 (shown only if Yes) -->
+          <div class="field hidden" id="followup-field">
+            <label class="field-label" for="q2">
+              <span class="field-num" aria-hidden="true">2</span>
+              If yes, what is the name of the individual you turned your receipts in to?
+            </label>
+            <div class="text-input-wrap">
+              <input
+                type="text"
+                id="q2"
+                name="q2"
+                placeholder="First and last name"
+                autocomplete="off"
+              />
+            </div>
+            <p class="field-hint">Please enter the full name of the office staff member.</p>
+          </div>
+
+          <!-- Your name (optional, helps accounting) -->
+          <div class="field">
+            <label class="field-label" for="respondent">
+              Your Name <span style="font-weight:400;color:#8B8A8A;">(optional)</span>
+            </label>
+            <div class="text-input-wrap">
+              <input
+                type="text"
+                id="respondent"
+                name="respondent"
+                placeholder="First and last name"
+                autocomplete="name"
+              />
+            </div>
+          </div>
+
+          <div class="submit-row">
+            <button type="submit">Submit Response</button>
+            <p class="submit-note">Your response will open your email client<br>pre-filled and ready to send.</p>
+          </div>
+
+        </form>
+
+        <!-- Thank-you state -->
+        <div id="thankyou">
+          <div class="check-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg>
+          </div>
+          <h3>Response Submitted</h3>
+          <p>Thank you for completing the survey.<br>Your email client should open momentarily with your response pre-filled. Please hit <strong>Send</strong> to complete the submission.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer>
+    <p><span class="brand">Summit Line Construction</span> &nbsp;|&nbsp; Receipt Process Survey &nbsp;|&nbsp; Questions? Contact <a href="mailto:receipts@summitlineconstruction.com" style="color:#F0941C;">receipts@summitlineconstruction.com</a></p>
+  </footer>
+
+  <!-- ── Script ─────────────────────────────────────────────────── -->
+  <script>
+    const form       = document.getElementById('survey-form');
+    const followup   = document.getElementById('followup-field');
+    const thankyou   = document.getElementById('thankyou');
+    const q1Radios   = document.querySelectorAll('input[name="q1"]');
+
+    // Show / hide Q2 based on Q1 answer
+    q1Radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'Yes' && radio.checked) {
+          followup.classList.remove('hidden');
+          document.getElementById('q2').focus();
+        } else {
+          followup.classList.add('hidden');
+          document.getElementById('q2').value = '';
+        }
+      });
+    });
+
+    // Handle submission → open mailto
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const q1Val = document.querySelector('input[name="q1"]:checked');
+      if (!q1Val) {
+        alert('Please answer Question 1 before submitting.');
+        return;
+      }
+
+      const q1Text    = q1Val.value;
+      const q2Text    = document.getElementById('q2').value.trim() || 'N/A';
+      const name      = document.getElementById('respondent').value.trim() || 'Not provided';
+
+      const subject   = encodeURIComponent('Receipt Process Survey Response');
+      const body      = encodeURIComponent(
+        `Receipt Process Survey Response\n` +
+        `──────────────────────────────────\n` +
+        `Respondent: ${name}\n\n` +
+        `Q1 — Have you historically turned in receipts to an office staff member\n` +
+        `     and never had to submit your own receipts?\n` +
+        `     Answer: ${q1Text}\n\n` +
+        (q1Text === 'Yes'
+          ? `Q2 — Name of the individual you turned receipts in to:\n     ${q2Text}\n`
+          : '') +
+        `\nSubmitted via Summit Line Construction Receipt Survey`
+      );
+
+      window.location.href =
+        `mailto:receipts@summitlineconstruction.com?subject=${subject}&body=${body}`;
+
+      // Show thank-you
+      form.style.display = 'none';
+      thankyou.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
