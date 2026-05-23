@@ -501,9 +501,8 @@
       });
     });
 
-    // ── Formspree silent submission ───────────────────────────────
-    // Replace YOUR_FORM_ID below with the ID from formspree.io
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xredkrkn';
+    // ── Web3Forms silent submission ───────────────────────────────
+    const WEB3FORMS_KEY = '4e146373-ab73-4e5d-a43a-8137f8f2b666';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -529,28 +528,31 @@
       btn.textContent = 'Sending…';
 
       const payload = {
-        _subject: 'Receipt Process Survey Response',
+        access_key: WEB3FORMS_KEY,
+        subject: 'Receipt Process Survey Response',
+        from_name: 'Summit Line Construction Survey',
         Respondent: name,
         'Q1 — Historically turned in receipts to office staff?': q1Text,
         'Q2 — Name of that individual': q1Text === 'Yes' ? q2Text : 'N/A',
       };
 
       try {
-        const res = await fetch(FORMSPREE_ENDPOINT, {
+        const res = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(payload),
         });
 
-        if (res.ok) {
+        const data = await res.json();
+
+        if (data.success) {
           form.style.display = 'none';
           thankyou.style.display = 'block';
         } else {
-          const data = await res.json();
           note.textContent = 'Submission failed — please try again.';
           btn.disabled = false;
           btn.textContent = 'Submit Response';
-          console.error('Formspree error:', data);
+          console.error('Web3Forms error:', data);
         }
       } catch (err) {
         note.textContent = 'Network error — please check your connection and try again.';
